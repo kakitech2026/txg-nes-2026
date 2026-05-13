@@ -816,6 +816,20 @@ const AdminDashboard = () => {
     });
   };
 
+  const filterMobaOpenRegistrations = (registrations: TeamRegistration[]) => {
+    return registrations.filter(reg => {
+      const matchesSearch = searchTerm === '' || 
+        reg.teamName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        reg.captainName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        reg.collegeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        reg.captainEmail?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesStatus = teamFilters.status === 'all' || reg.status === teamFilters.status;
+      
+      return matchesSearch && matchesStatus;
+    });
+  };
+
   const filterSponsorRegistrations = (registrations: SponsorRegistration[]) => {
     return registrations.filter(reg => {
       const matchesSearch = searchTerm === '' || 
@@ -1545,7 +1559,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="grid gap-4">
-                  {mobaOpenRegistrations.map((team) => (
+                  {filterMobaOpenRegistrations(mobaOpenRegistrations).map((team) => (
                     <Card key={team.id} className="hover:shadow-md transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-4">
